@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -29,6 +29,33 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(
             "TextNode(This is a text node, text, https://www.boot.dev)", repr(node)
         )
+    def test_text(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "This is a text node")
+
+    def test_text_b(self):
+        node = TextNode('bold', TextType.BOLD)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, 'b')
+        self.assertEqual(html_node.value, 'bold')
+
+    def test_text_link(self):
+        node = TextNode('anchor', TextType.LINK, 'https://www.boot.dev')
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, 'a')
+        self.assertEqual(html_node.value, 'anchor')
+        self.assertEqual(node.url, 'https://www.boot.dev')
+        self.assertEqual(html_node.props, {'href': 'https://www.boot.dev'})
+
+    def test_text_img(self):
+        node = TextNode('alt', TextType.IMAGE, 'https://www.google.com')
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, 'img')
+        self.assertEqual(html_node.value, '')
+        self.assertEqual(node.url, 'https://www.google.com')
+        self.assertEqual(html_node.props, {'src': 'https://www.google.com', 'alt': node.text})
 
 if __name__ == "__main__":
     unittest.main()

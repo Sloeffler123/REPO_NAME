@@ -47,8 +47,6 @@ class ParentNode(HTMLNode):
             raise ValueError('Tag needs a value')
         if self.children is None:
             raise ValueError('Childeren needs a value')
-        if not self.children:
-            return ''
         result = ''
         for i in self.children:
             result += i.to_html()
