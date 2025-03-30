@@ -3,28 +3,26 @@ from textnode import TextNode, TextType
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     
-    text_type_lst = []
     
-    result = ''
-    text_type_result = ''
-    nodes = old_nodes[0].text.split()
-    for node in nodes:
-        if delimiter in node:
-            text_type_result += ' ' + node 
-            if result != '':
-                text_type_lst.append(TextNode(text=result, text_type=TextType.TEXT))
-                result = ''
-        else:
-            result += node + ' '
-
+    new_nodes = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+        split_nodes = []
+        sections = old_node.text.split(delimiter)
+        if len(sections) % 2 == 0:
+            raise ValueError("invalid markdown, formatted section not closed")
+        for i in range(len(sections)):
+            if sections[i] == "":
+                continue
+            if i % 2 == 0:
     
-    
-    text_type_lst.append(TextNode(text=text_type_result.strip(delimiter), text_type=text_type))
-    text_type_lst.append(TextNode(text=result, text_type=TextType.TEXT))
-    return text_type_lst
-    # text_type_lst.append(TextNode(text=))
-            
-
+                split_nodes.append(TextNode(sections[i], TextType.TEXT))
+            else:
+               split_nodes.append(TextNode(sections[i], text_type))
+        new_nodes.extend(split_nodes)
+    return new_nodes
 
 
 

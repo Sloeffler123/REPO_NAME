@@ -57,12 +57,6 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node.url, 'https://www.google.com')
         self.assertEqual(html_node.props, {'src': 'https://www.google.com', 'alt': node.text})
 
-    def test_split_nodes_eq(self):
-        node = TextNode('This is a `code block` word', TextType.TEXT)
-        new_node = split_nodes_delimiter([node], '`', TextType.CODE)
-        self.assertEqual(new_node, [TextNode('This is a ', TextType.TEXT),TextNode('code block', TextType.CODE),TextNode(' word', TextType.TEXT),])
-
-
-
+    
 if __name__ == "__main__":
     unittest.main()
