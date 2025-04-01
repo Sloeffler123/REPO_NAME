@@ -1,22 +1,40 @@
+from enum import Enum
+
+class BlockType(Enum):
+    PARAGRAPH = 'paragraph'
+    HEADING = 'heading'
+    CODE = 'code'
+    QUOTE = 'quote'
+    UNORDERED_LIST = 'unordered list'
+    ORDERED_LIST = 'ordered list'
 
 
-
-
-# def markdown_to_blocks(markdown):
-#     blocks = []
-#     # Split by double newlines
-#     raw_blocks = markdown.split('\n\n')
+def block_to_block_type(markdown_block):
+    hashtags = markdown_block.count('#')
+    split_lst = markdown_block.split('\n')
     
-#     for block in raw_blocks:
-#         if block.strip():  # Skip empty blocks
-#             # Process each line in the block
-#             lines = block.strip().split('\n')
-#             cleaned_lines = [line.strip() for line in lines]
-#             # Rejoin the lines with single newlines
-#             cleaned_block = '\n'.join(cleaned_lines)
-#             blocks.append(cleaned_block)
-    
-#     return blocks
+    if markdown_block[0:hashtags + 1] == '#' * hashtags + ' ':
+        return BlockType.HEADING
+    elif markdown_block[0:3] == '```' and markdown_block[-3:] == '```':
+        return BlockType.CODE
+    elif markdown_block[0:2] == '> ':
+        for line in split_lst:
+            if not line.startswith('> '):
+                break
+        return BlockType.QUOTE
+    elif markdown_block[0:2] == '- ':
+        for line in split_lst:
+            if not line.startswith('- '):
+                break
+        return BlockType.UNORDERED_LIST
+    elif markdown_block[0].isdigit():
+        for line in split_lst:
+            if not line[0].isdigit:
+                break
+        return BlockType.ORDERED_LIST
+    else: return BlockType.PARAGRAPH
+
+
 
 
 def markdown_to_blocks(markdown):
