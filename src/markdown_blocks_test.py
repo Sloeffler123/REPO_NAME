@@ -1,5 +1,5 @@
 import unittest
-from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType
+from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType, extract_title
 
 
 class TestMarkdownToHTML(unittest.TestCase):
@@ -59,5 +59,10 @@ This is the same paragraph on a new line
         self.assertEqual(block_to_block_type(block), BlockType.ORDERED_LIST)
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
+
+    def test_extract_heading(self):
+        title = '''# Tolkien Fan Club'''
+        new_title = extract_title(title)
+        self.assertEqual(new_title, 'Tolkien Fan Club')    
 if __name__ == "__main__":
     unittest.main()

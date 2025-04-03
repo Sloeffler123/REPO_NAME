@@ -130,4 +130,10 @@ def ulist_to_html_node(block):
         html_items.append(ParentNode("li", children))
     return ParentNode("ul", html_items)
 
+def extract_title(markdown):
+    
+    if markdown[0:2] == '# ':
+        return markdown.strip(markdown[0:2])
+    else:
+        raise Exception('No header found')  
 
