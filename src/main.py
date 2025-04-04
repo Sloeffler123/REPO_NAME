@@ -2,15 +2,15 @@ from textnode import TextNode
 import shutil
 import os 
 from markdown_blocks import markdown_to_html_node, extract_title
-
+from pathlib import Path
 def main():
     copy_static(source='static', destination='public')
-    generate_page(from_path='content/index.md', template_path='template.html', dest_path='public/index.html')
-    generate_page(from_path='content/blog/glorfindel/index.md', template_path='template.html', dest_path='public/blog/glorfindel/index.html')
-    generate_page(from_path='content/blog/tom/index.md', template_path='template.html', dest_path='public/blog/tom/index.html')
-    generate_page(from_path='content/blog/majesty/index.md', template_path='template.html', dest_path='public/blog/majesty/index.html')
-    generate_page(from_path='content/contact/index.md', template_path='template.html', dest_path='public/contact/index.html')
-
+    
+    generate_pages_recursive(
+        dir_path_content="./content",          # Source markdown directory
+        template_path="./template.html",       # Path to your template file
+        dest_dir_path="./public"               # Destination directory
+    )
 def copy_static(source, destination):
     if source == 'static' and os.path.exists('public'):
         shutil.rmtree(destination)
@@ -52,12 +52,15 @@ def generate_page(from_path, template_path, dest_path):
         html_file.write(full_html)
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    directory_path = os.listdir(dir_path_content)
-    
-    for path in directory_path:
-        print(f'The current working path is {path}')
-        full_path = os.path.join()
-        
+    for filename in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        if os.path.isfile(from_path):
+            dest_path = Path(dest_path).with_suffix(".html")
+            generate_page(from_path, template_path, dest_path)
+        else:
+            generate_pages_recursive(from_path, template_path, dest_path)
+
 
 
 
