@@ -1,4 +1,4 @@
-from textnode import TextNode
+
 import shutil
 import os 
 from markdown_blocks import markdown_to_html_node, extract_title
@@ -58,9 +58,9 @@ def generate_page(from_path, template_path, dest_path, basepath):
     template = template.replace('src="/', f'src="{basepath}')#changing the template html file
     dir_name = os.path.dirname(dest_path)
     if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-    with open(dest_path, 'w') as html_file:
-        html_file.write(template)
+        os.makedirs(dir_name, exist_ok=True)
+    to_file = open(dest_path, "w")
+    to_file.write(template)
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     for filename in os.listdir(dir_path_content):
